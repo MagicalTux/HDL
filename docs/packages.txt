@@ -1,0 +1,7 @@
+alliance
+
+freehdl
+
+ghdl
+
+emerge -av alliance freehdl ghdl

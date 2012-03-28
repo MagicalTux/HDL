@@ -1,0 +1,141 @@
+; FTDIBUS.INF FOR EDA-002 EDX-002-004
+; Copyright (c) 2000-2008 FTDI Ltd.
+; Copyright (c) 2000-2008 HuMANDATA Ltd.
+;
+; USB serial converter driver installation for Windows 2000, XP, Server 2003, Vista, Server 2008 (x86 and x64).
+;
+
+[Version]
+Signature="$Windows NT$"
+DriverPackageType=PlugAndPlay
+DriverPackageDisplayName=%DESC%
+Class=USB
+ClassGUID={36fc9e60-c465-11cf-8056-444553540000}
+Provider=%FTDI%
+CatalogFile=ftdibus.cat
+DriverVer=03/13/2008,2.04.06
+
+[SourceDisksNames]
+1=%DriversDisk%,,,
+
+[SourceDisksFiles]
+ftdibus.sys = 1,i386
+ftbusui.dll = 1,i386
+ftd2xx.dll = 1,i386
+FTLang.Dll = 1,i386
+ftdiunin.exe = 1,i386
+ftdiun2k.ini = 1,i386
+
+[SourceDisksFiles.amd64]
+ftdibus.sys = 1,amd64
+ftbusui.dll = 1,amd64
+ftd2xx64.dll = 1,amd64
+ftd2xx.dll = 1,i386
+FTLang.Dll = 1,amd64
+ftdiunin.exe = 1,i386
+ftdiun2k.ini = 1,i386
+
+[DestinationDirs]
+FtdiBus.NT.Copy = 10,system32\drivers\%HuMANDATA%
+FtdiBus.NT.Copy2 = 10,system32\drivers\%HuMANDATA%
+FtdiBus.NTamd64.Copy = 10,system32\drivers\%HuMANDATA%
+FtdiBus.NTamd64.Copy2 = 10,system32\drivers\%HuMANDATA%
+FtdiBus.NTamd64.Copy3 = 10,syswow64\drivers\%HuMANDATA%
+
+
+[Manufacturer]
+%Ftdi%=FtdiHw,NTamd64
+
+[FtdiHw]
+%USB\VID_0F87&PID_1004.DeviceDesc%=FtdiBus.NT,USB\VID_0F87&PID_1004
+[FtdiHw.NTamd64]
+%USB\VID_0F87&PID_1004.DeviceDesc%=FtdiBus.NTamd64,USB\VID_0F87&PID_1004
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[FtdiBus.NT]
+CopyFiles=FtdiBus.NT.Copy,FtdiBus.NT.Copy2
+AddReg=FtdiBus.NT.AddReg,FtdiBusUnInst.NT.Reg
+
+[FtdiBus.NTamd64]
+CopyFiles=FtdiBus.NTamd64.Copy,FtdiBus.NTamd64.Copy2,FtdiBus.NTamd64.Copy3
+AddReg=FtdiBus.NT.AddReg
+
+[FtdiBus.NT.Services]
+AddService = FTDIBUS, 0x00000002, FtdiBus.NT.AddService
+
+[FtdiBus.NTamd64.Services]
+AddService = FTDIBUS, 0x00000002, FtdiBus.NT.AddService
+
+[FtdiBus.NT.AddService]
+DisplayName = %SvcDesc%
+ServiceType = 1 ; SERVICE_KERNEL_DRIVER
+StartType = 3 ; SERVICE_DEMAND_START
+ErrorControl = 1 ; SERVICE_ERROR_NORMAL
+ServiceBinary = %10%\system32\drivers\%HuMANDATA%\ftdibus.sys
+LoadOrderGroup = Base
+AddReg = FtdiBus.NT.AddService.AddReg
+
+[FtdiBus.NT.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,ftdibus.sys
+HKR,,EnumPropPages32,,"ftbusui.dll,FTBUSUIPropPageProvider"
+
+[FtdiBus.NT.AddService.AddReg]
+;HKR,Parameters,"LocIds",1,31,00,00,00,32,00,00,00,00
+;HKR,Parameters,"RetryResetCount",0x10001,50
+
+
+[FtdiBus.NT.Copy]
+ftdibus.sys
+
+[FtdiBus.NT.Copy2]
+ftbusui.dll
+ftd2xx.dll
+FTLang.dll
+ftdiunin.exe
+ftdiun2k.ini
+
+[FtdiBus.NTamd64.Copy]
+ftdibus.sys
+
+[FtdiBus.NTamd64.Copy2]
+ftbusui.dll
+ftd2xx.dll,ftd2xx64.dll
+FTLang.dll
+ftdiunin.exe
+ftdiun2k.ini
+
+[FtdiBus.NTamd64.Copy3]
+ftd2xx.dll
+
+;;;;;;;;;;;;;;LOAD VCP SET ;;;;;
+[FtdiBus.NT.HW]
+AddReg=FtdiBus.NT.HW.AddReg
+[FtdiBus.NTamd64.HW]
+ddReg=FtdiBus.NT.HW.AddReg
+[FtdiBus.NT.HW.AddReg]
+HKR,,"ConfigData",0x00010001,0
+;HKR,,"ConfigData",0x00010001,4
+;;;Bit 2 of the ConfigData parameter determines the driver to be loaded:
+;;;;;;
+
+[FtdiBusUnInst.NT.Reg]
+HKLM,%WINUN%,"FTDICOMM"
+HKLM,%WINUN%\FTDICOMM , "UninstallString",,"%10%\system32\drivers\%HuMANDATA%\ftdiunin.exe %10%\system32\drivers\%HuMANDATA%\ftdiun2k.ini"
+HKLM,%WINUN%\FTDICOMM , "DisplayName",,"EDA/EDX-002_EDX-004 HuMANDATA LTD."
+HKLM,%WINUN%\FTDICOMM , "URLInfoAbout",,"http://www.ftdichip.com"
+HKLM,%WINUN%\FTDICOMM , "Publisher",,"FTDI Ltd"
+HKLM,%WINUN%\FTDICOMM , "DisplayVersion",,"2.04.06"
+
+[Strings]
+Ftdi="FTDI"
+DESC="CDM Driver Package"
+DriversDisk="FTDI USB Drivers Disk"
+USB\VID_0F87&PID_1004.DeviceDesc="EDA/EDX-002_EDX-004 HuMANDATA LTD."
+WINUN="Software\Microsoft\Windows\CurrentVersion\Uninstall"
+SvcDesc="USB Serial Converter Driver"
+ClassName="USB"
+
+HuMANDATA="HDL\EDA-002 EDX-002-004"

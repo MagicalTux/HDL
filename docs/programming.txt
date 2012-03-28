@@ -1,0 +1,4 @@
+Programming require running BitCfg21/BitCfg.exe from the CD-ROM (bin dir)
+
+TODO: analyze USB protocol, write own programmer (bitcfg's sourcecode on the CD-ROM)
+
