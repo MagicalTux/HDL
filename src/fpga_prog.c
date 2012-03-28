@@ -202,7 +202,10 @@ int main(int argc, char *argv[]) {
 		FT_Close(ftHandle);
 		return 0;
 	}
-	printf("ok\n");
+	fprintf(stderr, "Programming...\n");
+	if (!FpgaConf(argv[1])) {
+		fprintf(stderr, "Programming failed\n");
+	}
 	FT_Close(ftHandle);
 	return 0;
 }
