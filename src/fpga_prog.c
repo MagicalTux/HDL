@@ -184,13 +184,13 @@ int main(int argc, char *argv[]) {
 	// "EDA/EDX-002 HuMANDATA LTD." or "ED-CONFIG HuMANDATA LTD. A"
 	FT_STATUS ftStatus;
 
+	fprintf(stderr, "Opening...\n");
 	FT_SetVIDPID(0x0f87, 0x1004);
 	ftStatus = FT_OpenEx("EDA/EDX-002 HuMANDATA LTD.", FT_OPEN_BY_DESCRIPTION, &ftHandle);
 	if (ftStatus != FT_OK) {
 		fprintf(stderr, "Failed to locate FPGA, please check USB link\n");
 		return 1;
 	}
-	fprintf(stderr, "Resetting...\n");
 	FT_ResetDevice(ftHandle);
 	FT_Purge(ftHandle, FT_PURGE_RX | FT_PURGE_TX);
 	FT_SetTimeouts(ftHandle, 0, 0);
@@ -199,6 +199,8 @@ int main(int argc, char *argv[]) {
 
 	// check argc
 	if (argc == 1) {
+		fprintf(stderr, "Resetting FPGA to empty status\n");
+		FpgaReset();
 		FT_Close(ftHandle);
 		return 0;
 	}
@@ -206,6 +208,7 @@ int main(int argc, char *argv[]) {
 	if (!FpgaConf(argv[1])) {
 		fprintf(stderr, "Programming failed\n");
 	}
+	fprintf(stderr, "FPGA initialized with program from %s\n", argv[1]);
 	FT_Close(ftHandle);
 	return 0;
 }
